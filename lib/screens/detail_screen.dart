@@ -13,7 +13,7 @@ class DetailScreen extends StatelessWidget {
 
   const DetailScreen({
     super.key,
-    // Menggunakan data dummy untuk sementara sebagai demo
+    
     this.animeId = '1',
     this.title = 'Black Clover',
     this.imagePath = 'assets/images/black_clover.jpg',
@@ -32,7 +32,7 @@ class DetailScreen extends StatelessWidget {
     return AppScaffold(
       body: CustomScrollView(
         slivers: [
-          // Header section with image and title
+         
           SliverAppBar(
             floating: true,
             pinned: true,
@@ -64,13 +64,12 @@ class DetailScreen extends StatelessWidget {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  // Background image
+                  
                   Image.asset(
                     imagePath,
                     fit: BoxFit.cover,
                   ),
-                  // Gradient overlay for better text visibility
-                  // Gradient overlay for better text visibility
+                
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -86,8 +85,7 @@ class DetailScreen extends StatelessWidget {
                     ),
                   ),
 
-                  // Title at the bottom of the image
-                  // Title at the bottom of the image
+                  
                   Positioned(
                     bottom: screenHeight * 0.02,
                     left: screenWidth * 0.04,
@@ -135,18 +133,17 @@ class DetailScreen extends StatelessWidget {
             ),
 
           ),
-          // Content section
+          
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.all(screenWidth * 0.04),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Rating and Episodes info
+                  
                   Row(
                     children: [
-                      // Rating
-                      // Rating
+                      
                       Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: screenWidth * 0.03,
@@ -185,7 +182,7 @@ class DetailScreen extends StatelessWidget {
                       ),
 
                       SizedBox(width: screenWidth * 0.05),
-                      // Total Episodes
+
                       Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: screenWidth * 0.03,
@@ -213,7 +210,7 @@ class DetailScreen extends StatelessWidget {
                       ),
 
                       SizedBox(width: screenWidth * 0.05),
-                      // Add to Favorites
+                      
                       Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: screenWidth * 0.03,
@@ -256,7 +253,7 @@ class DetailScreen extends StatelessWidget {
 
                   SizedBox(height: screenHeight * 0.03),
 
-                  // Description
+                  
                   Text(
                     'Synopsis',
                     style: TextStyle(

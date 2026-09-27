@@ -20,12 +20,12 @@ class AppRoutes {
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 GoRouter createRouter(){
-  // routes.dart
+  
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: AppRoutes.signIn,
     routes: [
-      // 1. Auth Routes
+      
       GoRoute(
         path: AppRoutes.signIn,
         name: 'sign-in',
@@ -37,7 +37,7 @@ GoRouter createRouter(){
         builder: (context, state) => const SignUpScreen(),
       ),
 
-      // 2. Detail Route
+      
       GoRoute(
         path: '${AppRoutes.details}/:id',
         name: 'detail',
@@ -48,7 +48,7 @@ GoRouter createRouter(){
         },
       ),
 
-      // 3. ShellRoute (Untuk Halaman yang menggunakan Bottom Navigation Bar)
+      
       StatefulShellRoute.indexedStack(
         builder: (context, state, child) {
           return BottomNavigationShell(navigationShell: child);
