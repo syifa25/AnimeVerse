@@ -44,7 +44,7 @@ GoRouter createRouter(){
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) {
           final animeId = state.pathParameters['id'] ?? '';
-          return DetailScreen(animeId: animeId);
+          return DetailScreen(id: animeId);
         },
       ),
 

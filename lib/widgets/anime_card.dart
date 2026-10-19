@@ -19,22 +19,20 @@ class AnimeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
     return GestureDetector(
-      onTap: (){
+      onTap: () {
+        // Diperbaiki: Menggunakan format string interpolation yang benar '${...}'
         context.push('${AppRoutes.details}/$id');
       },
       child: LayoutBuilder(
         builder: (context, constraints) {
           final cardWidth = constraints.maxWidth;
-
           return SizedBox(
             width: cardWidth,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-
-                // Image section - takes most of the space
+                // Image section
                 Expanded(
                   flex: 8,
                   child: ClipRRect(
@@ -47,9 +45,7 @@ class AnimeCard extends StatelessWidget {
                     ),
                   ),
                 ),
-
-
-                // Title section - compact but readable
+                // Title section
                 Expanded(
                   flex: 2,
                   child: Container(
@@ -74,7 +70,6 @@ class AnimeCard extends StatelessWidget {
                     ),
                   ),
                 ),
-
               ],
             ),
           );
