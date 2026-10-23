@@ -2,20 +2,49 @@
   import '../models/anime.dart';
   import 'dart:convert';
   import 'package:shared_preferences/shared_preferences.dart';
+  import '../data/dummy_data.dart';
 
   class AppStateProvider extends ChangeNotifier {
     List<Anime>_favorites = [];
+    
+
+    
 
     static const String _storageKey = 'favorite_anime_list';
 
-    final bool _isLoaded = false;
+    bool _isLoaded = false;
     bool get isLoaded => _isLoaded;
 
     AppStateProvider(){
       _loadFavorites();
     }
 
-    List <Anime> get favorites => _favorites;
+    List<Anime> get favorites => _favorites;
+
+    String _selectedGenre = "All";
+
+    String get selectedGenre => _selectedGenre;
+
+    void setSelectedGenre(String genre) {
+      _selectedGenre = genre;
+      notifyListeners();
+    }
+
+    String _homeSearchQuery = "";
+    String _favoriteSearchQuery = "";
+
+    String get homeSearchQuery => _homeSearchQuery;
+    String get favoriteSearchQuery => _favoriteSearchQuery;
+
+    void setHomeSearchQuery(String query){
+      _homeSearchQuery = query;
+      notifyListeners();
+    }
+
+    void setFavoriteSearchQuery(String query){
+      _favoriteSearchQuery = query;
+      notifyListeners();
+    }
 
     bool isFavorite(String id){
       return _favorites.any((anime) => anime.id == id);
@@ -45,38 +74,94 @@
       notifyListeners();
     }
 
-    Future<void> _saveFavorites() async
-  {
-    try {
-      final prefs = await SharedPreferences.getInstance();
+    List<Anime> getFilterAnimeForHome(){
+      List<Anime> result = DummyData.animeList;
 
-      final List<Map<String, dynamic>> favoritJson =
-        _favorites.map((anime) => anime.toJson()).toList();
+      if(_selectedGenre != "All"){
+        result = result.where((anime){
+          final genres = anime.genre.split(',').map((g) => g.trim()).toList();
 
-      await prefs.setString(_storageKey, jsonEncode(favoritJson));
+          return genres.contains(_selectedGenre);
+        }).toList();
+      }
 
-    } catch (e) {
-      debugPrint('Error saving favorites: $e');
+      if (_homeSearchQuery.isNotEmpty){
+        result = result.where((anime){
+          return anime.title
+            .toLowerCase()
+            .contains(_homeSearchQuery.toLowerCase());
+        }).toList();
+      }
+      return result;
     }
-  }
+
+    List<Anime> getFilteredFavorites(){
+      List<Anime> result = _favorites;
+      if(_favoriteSearchQuery.isNotEmpty){
+        result = result.where((anime){
+          return anime.title
+            .toLowerCase()
+            .contains(_favoriteSearchQuery.toLowerCase());
+        }).toList();
+      }
+      return result;
+    }
+
+    
+    Future<void> _saveFavorites() async {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+
+        final List<Map<String, dynamic>> favoritJson =
+            _favorites.map((anime) => anime.toJson()).toList();
+
+        final success = await prefs.setString(
+          _storageKey,
+          jsonEncode(favoritJson),
+        );
+
+        debugPrint('SAVE FAVORITES: $success');
+        debugPrint('JUMLAH FAVORITES: ${_favorites.length}');
+      } catch (e) {
+        debugPrint('Error saving favorites: $e');
+      }
+    }
+
 
     Future<void> _loadFavorites() async {
       try {
         final prefs = await SharedPreferences.getInstance();
+        
+
+        debugPrint('PREFS INSTANCE: $prefs');
+        debugPrint('SEMUA KEYS: ${prefs.getKeys()}');
+        debugPrint('DATA FAVORIT: ${prefs.getString(_storageKey)}');
+
+        debugPrint('STORAGE KEY: $_storageKey');
+        debugPrint('SEMUA KEYS: ${prefs.getKeys()}');
 
         final String? favoriteJson = prefs.getString(_storageKey);
 
-        if (favoriteJson != null){
-          final List<dynamic> decode = jsonDecode(favoriteJson);
+        debugPrint('DATA TERSIMPAN: $favoriteJson');
 
-          _favorites = decode
-            .map((item) => Anime.fromJson(item as Map<String, dynamic>))
-            .toList();
+        if (favoriteJson != null) {
+          final List<dynamic> decoded = jsonDecode(favoriteJson);
 
-          notifyListeners();
+          _favorites = decoded
+              .map(
+                (item) => Anime.fromJson(
+                  item as Map<String, dynamic>,
+                ),
+              )
+              .toList();
+
+          debugPrint('JUMLAH FAVORIT DIMUAT: ${_favorites.length}');
         }
       } catch (e) {
         debugPrint('Error loading favorites: $e');
+      } finally {
+        _isLoaded = true;
+        notifyListeners();
       }
     }
 
